@@ -2,7 +2,17 @@ FROM fedora:latest
 
 LABEL maintainer="attinagaoxu@gmail.com"
 
-RUN dnf install qt5-devel -y
+RUN dnf -y update && dnf clean all
+RUN dnf -y install java-1.8.0-openjdk openssh-server qt5-devel qt5-qtbase-devel opencv-devel git && dnf clean all
 
-CMD bash
+RUN ssh-keygen -A
+RUN sed -i 's|session    required     pam_loginuid.so|session    optional     pam_loginuid.so|g' /etc/pam.d/sshd
+
+RUN mkdir -p /var/run/sshd
+RUN useradd jenkins
+RUN echo "jenkins:jenkins" | chpasswd
+
+EXPOSE 22
+
+CMD ["/usr/sbin/sshd", "-D"]
 
