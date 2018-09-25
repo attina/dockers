@@ -11,6 +11,7 @@ RUN sed -i 's|session    required     pam_loginuid.so|session    optional     pa
 RUN mkdir -p /var/run/sshd
 RUN useradd jenkins
 RUN echo "jenkins:jenkins" | chpasswd
+RUN mkdir -p /home/jenkins && chown jenkins /home/jenkins
 
 EXPOSE 22
 
