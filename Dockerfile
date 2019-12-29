@@ -21,3 +21,11 @@ RUN mkdir -p /home/sn335x && chown sn335x /home/sn335x
 # CMD ["/usr/sbin/sshd", "-D"]
 
 # CMD bash
+
+USER sn335x
+WORKDIR /home/sn335x
+RUN git clone --single-branch --depth 1 -b 2019.11.x git://git.busybox.net/buildroot
+RUN curl -o sn335x_buildroot_defconfig https://gist.githubusercontent.com/attina/1cf9d8eca6a102a356412ed284fb0e5c/raw/e9597425128884b673051a9d7c8a13bd207a0f90/sn335x_buildroot_defconfig
+RUN curl -o sn335x_linux_defconfig https://gist.githubusercontent.com/attina/1cf9d8eca6a102a356412ed284fb0e5c/raw/10d9cc5c49b5f82c7212b88389b09831ef130062/sn335x_linux_defconfig
+RUN curl -o sn335x-ppu.dts https://gist.githubusercontent.com/attina/1cf9d8eca6a102a356412ed284fb0e5c/raw/10d9cc5c49b5f82c7212b88389b09831ef130062/sn335x-ppu.dts
+WORKDIR /home/sn335x/buildroot
