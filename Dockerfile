@@ -12,10 +12,10 @@ RUN dnf -y install gcc g++ git make which unzip file patch wget cpio rsync bc bz
 # RUN sed -i 's|session    required     pam_loginuid.so|session    optional     pam_loginuid.so|g' /etc/pam.d/sshd
 
 # RUN mkdir -p /var/run/sshd
-RUN useradd sn335x
-RUN usermod -a -G wheel sn335x
-RUN echo "sn335x:sn335x" | chpasswd
-RUN mkdir -p /home/sn335x && chown sn335x /home/sn335x
+RUN useradd am335x
+RUN usermod -a -G wheel am335x
+RUN echo "am335x:am335x" | chpasswd
+RUN mkdir -p /home/am335x && chown am335x /home/am335x
 
 # EXPOSE 22
 
@@ -23,17 +23,9 @@ RUN mkdir -p /home/sn335x && chown sn335x /home/sn335x
 
 # CMD bash
 
-USER sn335x
-WORKDIR /home/sn335x
+USER am335x
+WORKDIR /home/am335x
 RUN git clone --single-branch --depth 1 -b 2019.11.x git://git.busybox.net/buildroot
-RUN curl -o sn335x_buildroot_defconfig https://gist.githubusercontent.com/attina/1cf9d8eca6a102a356412ed284fb0e5c/raw/9570204430842c261b93f4d7418dcb6ae8677e24/sn335x_buildroot_defconfig
-RUN curl -o sn335x_linux_defconfig https://gist.githubusercontent.com/attina/1cf9d8eca6a102a356412ed284fb0e5c/raw/7fc6e9e9b1e8df59739b46fc2212b618933c42ea/sn335x_linux_defconfig
-RUN curl -o sn335x_uboot_defconfig https://gist.githubusercontent.com/attina/1cf9d8eca6a102a356412ed284fb0e5c/raw/7fc6e9e9b1e8df59739b46fc2212b618933c42ea/sn335x_uboot_defconfig
-RUN curl -o sn335x-ppu.dts https://gist.githubusercontent.com/attina/1cf9d8eca6a102a356412ed284fb0e5c/raw/7fc6e9e9b1e8df59739b46fc2212b618933c42ea/sn335x-ppu.dts
-RUN curl -o sn335x-ppu-uboot.dts https://gist.githubusercontent.com/attina/1cf9d8eca6a102a356412ed284fb0e5c/raw/7fc6e9e9b1e8df59739b46fc2212b618933c42ea/sn335x-ppu-uboot.dts
-RUN curl -o sn335x-uboot.patch https://gist.githubusercontent.com/attina/1cf9d8eca6a102a356412ed284fb0e5c/raw/7fc6e9e9b1e8df59739b46fc2212b618933c42ea/sn335x-uboot.patch
-RUN cp sn335x_buildroot_defconfig buildroot/configs/sn335x_defconfig
-WORKDIR /home/sn335x/buildroot
-RUN make sn335x_defconfig
-RUN make source
-RUN make all; exit 0
+WORKDIR /home/am335x/buildroot
+RUN make beaglebone_defconfig
+RUN make sdk
