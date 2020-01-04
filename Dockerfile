@@ -4,7 +4,7 @@ LABEL maintainer="attinagaoxu@gmail.com"
 
 # RUN dnf -y update
 RUN dnf -y install autoconf gperf bison file flex texinfo help2man gcc-c++ libtool make patch \
-    ncurses-devel python3-devel perl-Thread-Queue bzip2 git wget which xz unzip
+    ncurses-devel python3-devel perl-Thread-Queue bzip2 git wget which xz unzip gettext-devel
 RUN dnf clean all
 
 RUN useradd xtools
