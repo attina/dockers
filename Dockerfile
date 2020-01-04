@@ -12,9 +12,9 @@ RUN dnf -y install gcc g++ git make which unzip file patch wget cpio rsync bc bz
 # RUN sed -i 's|session    required     pam_loginuid.so|session    optional     pam_loginuid.so|g' /etc/pam.d/sshd
 
 # RUN mkdir -p /var/run/sshd
-RUN useradd am335x
-RUN usermod -a -G wheel am335x
-RUN echo "am335x:am335x" | chpasswd
+RUN useradd ctng
+RUN usermod -a -G wheel ctng
+RUN echo "ctng:ctng" | chpasswd
 
 # EXPOSE 22
 
@@ -22,9 +22,18 @@ RUN echo "am335x:am335x" | chpasswd
 
 # CMD bash
 
-USER am335x
-WORKDIR /home/am335x
-RUN git clone --single-branch --depth 1 -b 2019.11.x git://git.busybox.net/buildroot
-WORKDIR /home/am335x/buildroot
-RUN make beaglebone_defconfig
-RUN make sdk
+USER ctng
+WORKDIR /home/ctng
+RUN git clone --single-branch --depth 1 -b crosstool-ng-1.24.0 https://github.com/crosstool-ng/crosstool-ng
+WORKDIR /home/ctng/crosstool-ng
+RUN ./bootstrap
+RUN ./configure
+RUN make
+USER root
+RUN make install
+USER ctng
+RUN mkdir build
+WORKDIR /home/ctng/crosstool-ng/build
+COPY arm-cortex_a8-linux-gnueabihf /home/ctng/crosstool-ng/build/samples
+RUN ct-ng arm-cortex_a8-linux-gnueabihf
+RUN ct-ng build
