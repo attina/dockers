@@ -37,3 +37,7 @@ WORKDIR /home/ctng/crosstool-ng/build
 COPY arm-cortex_a8-linux-gnueabihf /home/ctng/crosstool-ng/build/samples
 RUN ct-ng arm-cortex_a8-linux-gnueabihf
 RUN ct-ng build
+WORKDIR /home/ctng
+RUN tar zcf x-tools-arm-cortex_a8-linux-gnueabihf.tar.gz x-tools
+RUN upload-github-release-asset.sh github_api_token=c07dbac22ce41199641589e6e8037fed4571d718 owner=attina repo=dockers tag=1.24.0 filename=./x-tools-arm-cortex_a8-linux-gnueabihf.tar.gz
+RUN rm -rf /home/ctng/crosstool-ng/build
