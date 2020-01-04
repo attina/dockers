@@ -3,7 +3,7 @@ FROM fedora:latest
 LABEL maintainer="attinagaoxu@gmail.com"
 
 # RUN dnf -y update
-RUN dnf -y autoconf gperf bison file flex texinfo help2man gcc-c++ libtool make patch \
+RUN dnf -y install autoconf gperf bison file flex texinfo help2man gcc-c++ libtool make patch \
     ncurses-devel python3-devel perl-Thread-Queue bzip2 git wget which xz unzip
 RUN dnf clean all
 
