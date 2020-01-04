@@ -15,6 +15,7 @@ USER xtools
 WORKDIR /home/xtools
 RUN git clone --single-branch --depth 1 -b crosstool-ng-1.24.0 https://github.com/crosstool-ng/crosstool-ng
 WORKDIR /home/xtools/crosstool-ng
+RUN mkdir -p build/samples
 COPY --chown=xtools:xtools arm-cortex_a8-linux-gnueabihf /home/xtools/crosstool-ng/build/samples/arm-cortex_a8-linux-gnueabihf
 RUN ls 
 RUN ./bootstrap
