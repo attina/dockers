@@ -15,14 +15,14 @@ USER xtools
 WORKDIR /home/xtools
 RUN git clone --single-branch --depth 1 -b crosstool-ng-1.24.0 https://github.com/crosstool-ng/crosstool-ng
 WORKDIR /home/xtools/crosstool-ng
-COPY arm-cortex_a8-linux-gnueabihf /home/xtools/crosstool-ng/samples
+COPY arm-cortex_a8-linux-gnueabihf /home/xtools/crosstool-ng/build/samples/arm-cortex_a8-linux-gnueabihf 
+RUN ls 
 RUN ./bootstrap
 RUN ./configure
 RUN make
 USER root
 RUN make install
 USER xtools
-RUN mkdir build
 WORKDIR /home/xtools/crosstool-ng/build
 RUN ct-ng arm-cortex_a8-linux-gnueabihf
 RUN ct-ng build
