@@ -15,7 +15,6 @@ RUN dnf -y install gcc g++ git make which unzip file patch wget cpio rsync bc bz
 RUN useradd am335x
 RUN usermod -a -G wheel am335x
 RUN echo "am335x:am335x" | chpasswd
-RUN mkdir -p /home/am335x && chown am335x /home/am335x
 
 # EXPOSE 22
 
