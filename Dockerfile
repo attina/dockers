@@ -35,7 +35,7 @@ RUN ct-ng build
 WORKDIR /home/xtools
 
 # tar the toolchain and upload it github
-RUN tar zcf x-tools-arm-cortex_a8-linux-gnueabihf.tar.gz x-tools
+# RUN tar zcf x-tools-arm-cortex_a8-linux-gnueabihf.tar.gz x-tools
 # COPY upload-github-release-asset.sh /home/xtools
 # RUN chmod a+x upload-github-release-asset.sh
 # RUN ./upload-github-release-asset.sh github_api_token=c07dbac22ce41199641589e6e8037fed4571d718 owner=attina repo=xtools tag=1.24.0 filename=./x-tools-arm-cortex_a8-linux-gnueabihf.tar.gz
