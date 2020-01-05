@@ -5,7 +5,7 @@ pipeline {
         stage('Build') {
             steps {
                 echo 'Building..'
-                sh 'docker build .'
+                sh 'docker build --rm -t attina/${GIT_BRANCH}:latest .'
             }
         }
         stage('Test') {
