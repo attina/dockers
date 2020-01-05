@@ -5,12 +5,12 @@ pipeline {
         stage('Build') {
             steps {
                 echo 'Building..'
-                sh 'docker build --rm -t attina/${GIT_BRANCH}:latest .'
+                sh 'docker build --squash --compress --rm -t attina/${GIT_BRANCH}:latest .'
             }
         }
-        stage('Test') {
+        stage('Push') {
             steps {
-                echo 'Testing..'
+                echo 'docker push attina/${GIT_BRANCH}:latest'
             }
         }
         stage('Deploy') {
