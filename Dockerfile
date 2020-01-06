@@ -10,6 +10,7 @@ RUN dnf clean all
 
 RUN useradd xtools
 RUN usermod -a -G wheel xtools
+RUN usermod -a -G root xtools
 RUN echo "xtools:xtools" | chpasswd
 
 # prepare configuration file
@@ -44,3 +45,4 @@ WORKDIR /home/xtools/crosstool-ng
 RUN make uninstall
 WORKDIR /home/xtools
 RUN rm -rf /home/xtools/crosstool-ng
+ENV PATH="/home/xtools/x-tools/arm-cortex_a8-linux-gnueabihf/bin:${PATH}"
