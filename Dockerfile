@@ -10,7 +10,6 @@ RUN dnf clean all
 
 RUN useradd xtools
 RUN usermod -a -G wheel xtools
-RUN usermod -a -G root xtools
 RUN echo "xtools:xtools" | chpasswd
 
 # prepare configuration file
