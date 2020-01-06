@@ -1,0 +1,217 @@
+diff --git a/arch/arm/include/asm/arch-am33xx/ddr_defs.h b/arch/arm/include/asm/arch-am33xx/ddr_defs.h
+index d8ddecc0bd..ae12500202 100644
+--- a/arch/arm/include/asm/arch-am33xx/ddr_defs.h
++++ b/arch/arm/include/asm/arch-am33xx/ddr_defs.h
+@@ -122,6 +122,22 @@
+ #define MT41K256M16HA125E_PHY_FIFO_WE		0x94
+ #define MT41K256M16HA125E_IOCTRL_VALUE		0x18B
+ 
++/* Micron MT41K256M16HA-125ITE */
++#define MT41K256M16HA125ITE_EMIF_READ_LATENCY   0x100007
++#define MT41K256M16HA125ITE_EMIF_TIM1           0x0AAAE51B
++#define MT41K256M16HA125ITE_EMIF_TIM2           0x267B7FDA
++#define MT41K256M16HA125ITE_EMIF_TIM3           0x501F877F
++#define MT41K256M16HA125ITE_EMIF_SDCFG          0x61C05332
++#define MT41K256M16HA125ITE_EMIF_SDREF          0xC30
++#define MT41K256M16HA125ITE_ZQ_CFG              0x50074BE4
++#define MT41K256M16HA125ITE_RATIO               0x80
++#define MT41K256M16HA125ITE_INVERT_CLKOUT       0x0
++#define MT41K256M16HA125ITE_RD_DQS              0x3D
++#define MT41K256M16HA125ITE_WR_DQS              0x4B
++#define MT41K256M16HA125ITE_PHY_WR_DATA         0x7F
++#define MT41K256M16HA125ITE_PHY_FIFO_WE         0x9D
++#define MT41K256M16HA125ITE_IOCTRL_VALUE        0x18B
++
+ /* Micron MT41J512M8RH-125 on EVM v1.5 */
+ #define MT41J512M8RH125_EMIF_READ_LATENCY	0x100006
+ #define MT41J512M8RH125_EMIF_TIM1		0x0888A39B
+@@ -154,6 +170,22 @@
+ #define K4B2G1646EBIH9_PHY_WR_DATA		0x76
+ #define K4B2G1646EBIH9_IOCTRL_VALUE		0x18B
+ 
++/* Samsung K4B4G1646E-BYK0 */
++#define K4B4G1646EBYK0_EMIF_READ_LATENCY        0x00100208
++#define K4B4G1646EBYK0_EMIF_TIM1                0x0AAAE51B
++#define K4B4G1646EBYK0_EMIF_TIM2                0x246B7FDA
++#define K4B4G1646EBYK0_EMIF_TIM3                0x50FFE67F
++#define K4B4G1646EBYK0_EMIF_SDCFG               0x61A05332
++#define K4B4G1646EBYK0_EMIF_SDREF               0xC30
++#define K4B4G1646EBYK0_ZQ_CFG                   0x50074BE1
++#define K4B4G1646EBYK0_RATIO                    0x100
++#define K4B4G1646EBYK0_INVERT_CLKOUT            0x1
++#define K4B4G1646EBYK0_RD_DQS                   0x40
++#define K4B4G1646EBYK0_WR_DQS                   0x82
++#define K4B4G1646EBYK0_PHY_WR_DATA              0xC2
++#define K4B4G1646EBYK0_PHY_FIFO_WE              0xF1
++#define K4B4G1646EBYK0_IOCTRL_VALUE             0x18B
++
+ #define  LPDDR2_ADDRCTRL_IOCTRL_VALUE   0x294
+ #define  LPDDR2_ADDRCTRL_WD0_IOCTRL_VALUE 0x00000000
+ #define  LPDDR2_ADDRCTRL_WD1_IOCTRL_VALUE 0x00000000
+diff --git a/board/ti/am335x/board.c b/board/ti/am335x/board.c
+index c93ee29e89..74a990bfd3 100644
+--- a/board/ti/am335x/board.c
++++ b/board/ti/am335x/board.c
+@@ -151,6 +151,13 @@ static const struct ddr_data ddr3_icev2_data = {
+ 	.datawrsratio0 = MT41J128MJT125_PHY_WR_DATA_400MHz,
+ };
+ 
++static const struct ddr_data ddr3_sn335x_data = {
++    .datardsratio0 = K4B4G1646EBYK0_RD_DQS,
++    .datawdsratio0 = K4B4G1646EBYK0_WR_DQS,
++    .datafwsratio0 = K4B4G1646EBYK0_PHY_FIFO_WE,
++    .datawrsratio0 = K4B4G1646EBYK0_PHY_WR_DATA,
++};
++
+ static const struct cmd_control ddr3_cmd_ctrl_data = {
+ 	.cmd0csratio = MT41J128MJT125_RATIO,
+ 	.cmd0iclkout = MT41J128MJT125_INVERT_CLKOUT,
+@@ -195,6 +202,17 @@ static const struct cmd_control ddr3_icev2_cmd_ctrl_data = {
+ 	.cmd2iclkout = MT41J128MJT125_INVERT_CLKOUT_400MHz,
+ };
+ 
++static const struct cmd_control ddr3_sn335x_cmd_ctrl_data = {
++    .cmd0csratio = K4B4G1646EBYK0_RATIO,
++    .cmd0iclkout = K4B4G1646EBYK0_INVERT_CLKOUT,
++
++    .cmd1csratio = K4B4G1646EBYK0_RATIO,
++    .cmd1iclkout = K4B4G1646EBYK0_INVERT_CLKOUT,
++
++    .cmd2csratio = K4B4G1646EBYK0_RATIO,
++    .cmd2iclkout = K4B4G1646EBYK0_INVERT_CLKOUT,
++};
++
+ static struct emif_regs ddr3_emif_reg_data = {
+ 	.sdram_config = MT41J128MJT125_EMIF_SDCFG,
+ 	.ref_ctrl = MT41J128MJT125_EMIF_SDREF,
+@@ -240,6 +258,16 @@ static struct emif_regs ddr3_icev2_emif_reg_data = {
+ 				PHY_EN_DYN_PWRDN,
+ };
+ 
++static struct emif_regs ddr3_sn335x_emif_reg_data = {
++    .sdram_config = K4B4G1646EBYK0_EMIF_SDCFG,
++    .ref_ctrl = K4B4G1646EBYK0_EMIF_SDREF,
++    .sdram_tim1 = K4B4G1646EBYK0_EMIF_TIM1,
++    .sdram_tim2 = K4B4G1646EBYK0_EMIF_TIM2,
++    .sdram_tim3 = K4B4G1646EBYK0_EMIF_TIM3,
++    .zq_config = K4B4G1646EBYK0_ZQ_CFG,
++    .emif_ddr_phy_ctlr_1 = K4B4G1646EBYK0_EMIF_READ_LATENCY,
++};
++
+ #ifdef CONFIG_SPL_OS_BOOT
+ int spl_start_uboot(void)
+ {
+@@ -266,7 +294,7 @@ const struct dpll_params *get_dpll_ddr_params(void)
+ 
+ 	if (board_is_evm_sk())
+ 		return &dpll_ddr3_303MHz[ind];
+-	else if (board_is_pb() || board_is_bone_lt() || board_is_icev2())
++	else if (board_is_pb() || board_is_bone_lt() || board_is_icev2() || board_is_sn335x())
+ 		return &dpll_ddr3_400MHz[ind];
+ 	else if (board_is_evm_15_or_later())
+ 		return &dpll_ddr3_303MHz[ind];
+@@ -294,7 +322,7 @@ const struct dpll_params *get_dpll_mpu_params(void)
+ 	int ind = get_sys_clk_index();
+ 	int freq = am335x_get_efuse_mpu_max_freq(cdev);
+ 
+-	if (bone_not_connected_to_ac_power())
++	if (bone_not_connected_to_ac_power() || board_is_sn335x())
+ 		freq = MPUPLL_M_600;
+ 
+ 	if (board_is_pb() || board_is_bone_lt())
+@@ -342,7 +370,7 @@ static void scale_vcores_bone(int freq)
+ 	 * On Beaglebone White we need to ensure we have AC power
+ 	 * before increasing the frequency.
+ 	 */
+-	if (bone_not_connected_to_ac_power())
++	if (bone_not_connected_to_ac_power() || board_is_sn335x())
+ 		freq = MPUPLL_M_600;
+ 
+ 	/*
+@@ -537,6 +565,14 @@ const struct ctrl_ioregs ioregs = {
+ 	.dt1ioctl		= MT47H128M16RT25E_IOCTRL_VALUE,
+ };
+ 
++const struct ctrl_ioregs ioregs_sn335x = {
++    .cm0ioctl               = K4B4G1646EBYK0_IOCTRL_VALUE,
++    .cm1ioctl               = K4B4G1646EBYK0_IOCTRL_VALUE,
++    .cm2ioctl               = K4B4G1646EBYK0_IOCTRL_VALUE,
++    .dt0ioctl               = K4B4G1646EBYK0_IOCTRL_VALUE,
++    .dt1ioctl               = K4B4G1646EBYK0_IOCTRL_VALUE,
++};
++
+ void sdram_init(void)
+ {
+ 	if (board_is_evm_sk()) {
+@@ -556,6 +592,15 @@ void sdram_init(void)
+ 	if (board_is_evm_sk())
+ 		config_ddr(303, &ioregs_evmsk, &ddr3_data,
+ 			   &ddr3_cmd_ctrl_data, &ddr3_emif_reg_data, 0);
++	else if (board_is_sn335x())
++	{
++		gpio_request(GPIO_TO_PIN(3,15), "led0");
++		gpio_direction_output(GPIO_TO_PIN(3,15), 1);
++		config_ddr(400, &ioregs_sn335x,
++			   &ddr3_sn335x_data,
++			   &ddr3_sn335x_cmd_ctrl_data,
++			   &ddr3_sn335x_emif_reg_data, 0);
++	}
+ 	else if (board_is_pb() || board_is_bone_lt())
+ 		config_ddr(400, &ioregs_bonelt,
+ 			   &ddr3_beagleblack_data,
+@@ -837,6 +882,8 @@ int board_late_init(void)
+ 		name = "BBG1";
+ 	if (board_is_bben())
+ 		name = "BBEN";
++	if (board_is_sn335x())
++		name = "SN335XPPU";
+ 	set_board_info_env(name);
+ 
+ 	/*
+@@ -951,7 +998,7 @@ U_BOOT_DEVICE(am335x_eth) = {
+ #ifdef CONFIG_SPL_LOAD_FIT
+ int board_fit_config_name_match(const char *name)
+ {
+-	if (board_is_gp_evm() && !strcmp(name, "am335x-evm"))
++	if ((board_is_gp_evm() && !strcmp(name, "am335x-evm")) || board_is_sn335x())
+ 		return 0;
+ 	else if (board_is_bone() && !strcmp(name, "am335x-bone"))
+ 		return 0;
+diff --git a/board/ti/am335x/board.h b/board/ti/am335x/board.h
+index 48df914af9..71ce51897f 100644
+--- a/board/ti/am335x/board.h
++++ b/board/ti/am335x/board.h
+@@ -48,10 +48,15 @@ static inline int board_is_bben(void)
+ 	return board_is_bone_lt() && !strncmp(board_ti_get_rev(), "SE", 2);
+ }
+ 
++static inline int board_is_sn335x(void)
++{
++	return true;
++}
++
+ static inline int board_is_beaglebonex(void)
+ {
+ 	return board_is_pb() || board_is_bone() || board_is_bone_lt() ||
+-	       board_is_bbg1() || board_is_bben();
++	       board_is_bbg1() || board_is_bben() || board_is_sn335x();
+ }
+ 
+ static inline int board_is_evm_sk(void)
+diff --git a/include/configs/am335x_evm.h b/include/configs/am335x_evm.h
+index def39d2fc3..bfb3a77754 100644
+--- a/include/configs/am335x_evm.h
++++ b/include/configs/am335x_evm.h
+@@ -157,7 +157,11 @@
+ 			"setenv fdtfile am335x-sancloud-bbe.dtb; fi; " \
+ 		"if test $board_name = A33515BB; then " \
+ 			"setenv fdtfile am335x-evm.dtb; fi; " \
+-		"if test $board_name = A335X_SK; then " \
++		"if test $board_name = SN335XPPU; then " \
++			"setenv fdtfile sn335x-ppu.dtb; fi; " \
++		"if test $board_name = SN335XHUB; then " \
++			"setenv fdtfile sn335x-hub.dtb; fi; " \
++		"if test $board_name = A33X_SK; then " \
+ 			"setenv fdtfile am335x-evmsk.dtb; fi; " \
+ 		"if test $board_name = A335_ICE && test $ice_mii = rmii; then " \
+ 			"setenv fdtfile am335x-icev2.dtb; fi; " \
