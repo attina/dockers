@@ -1,21 +1,26 @@
 pipeline {
     agent any
     stages {
-        stage('Build') {
+        stage('Prepare') {
             steps {
                 echo 'Pull Docker image...'
-                sh 'docker pull attina/${GIT_BRANCH}:latest'
+                sh "docker pull attina/${GIT_BRANCH}:latest"
             }
         }
-        stage('Archive') {
+        stage('Build') {
             steps {
                 echo 'Extract SDK and images'
-                sh './extract-artifacts.sh'
+                sh "docker run -d --name '${GIT_BRANCH}-${BUILD_NUMBER}' attina/${GIT_BRANCH}:latest"
+                sh "docker exec '${GIT_BRANCH}-${BUILD_NUMBER}' bash -c 'make sdk'"
+                sh "docker cp '${GIT_BRANCH}-${BUILD_NUMBER}':/home/xtools/buildroot/output/images ./"
+                sh "tar zcf images.tar.gz images"
             }
         }
         stage('Cleanup') {
             steps {
                 echo 'Cleanup ...'
+                sh "docker rm '${GIT_BRANCH}-${BUILD_NUMBER}'"
+                sh "docker image prune -f"
             }
         }
     }
