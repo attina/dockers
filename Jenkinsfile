@@ -11,6 +11,7 @@ pipeline {
             steps {
                 echo 'Extract SDK and images'
                 sh "docker run -d -it --name '${GIT_BRANCH}-${BUILD_NUMBER}' attina/${GIT_BRANCH}:latest"
+                sh "docker cp sn335x '${GIT_BRANCH}-${BUILD_NUMBER}':/home/xtools/"
                 sh "docker exec '${GIT_BRANCH}-${BUILD_NUMBER}' make sdk"
                 sh "docker cp '${GIT_BRANCH}-${BUILD_NUMBER}':/home/xtools/buildroot/output/images ./"
                 sh "tar zcf images.tar.gz images"
