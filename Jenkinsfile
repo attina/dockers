@@ -1,34 +1,36 @@
 pipeline {
     agent any
     stages {
-        stage('Prepare') {
+        stage('Build Docker image')
+        {
+            when { changeset "Dockerfile" }
             steps {
-                echo 'Pull Docker image...'
-                sh "docker pull attina/${GIT_BRANCH}:latest"
+                echo 'Build Docker image...'
+                sh "docker build --squash --compress --rm -t attina/${GIT_BRANCH}:latest ."
+                sh "docker push attina/${GIT_BRANCH}:latest"
             }
         }
-        stage('Build') {
+        stage('Build SDK') {
+            when { changeset "sn335x/*" }
             steps {
-                echo 'Extract SDK and images'
-                sh "docker run -d -it --name '${GIT_BRANCH}-${BUILD_NUMBER}' attina/${GIT_BRANCH}:latest"
+                echo 'Build ${GIT_BRANCH} SDK'
+                sh "docker pull attina/${GIT_BRANCH}:latest"
+                sh "docker run -d -it --rm --name '${GIT_BRANCH}-${BUILD_NUMBER}' attina/${GIT_BRANCH}:latest"
                 sh "docker cp sn335x '${GIT_BRANCH}-${BUILD_NUMBER}':/home/xtools/"
                 sh "docker exec '${GIT_BRANCH}-${BUILD_NUMBER}' make sdk"
                 sh "docker cp '${GIT_BRANCH}-${BUILD_NUMBER}':/home/xtools/buildroot/output/images ./"
                 sh "tar zcf images.tar.gz images"
-            }
-        }
-        stage('Cleanup') {
-            steps {
-                echo 'Cleanup ...'
-				sh "docker stop '${GIT_BRANCH}-${BUILD_NUMBER}'"
-                sh "docker rm '${GIT_BRANCH}-${BUILD_NUMBER}'"
-                sh "docker image prune -f"
+                sh "docker stop '${GIT_BRANCH}-${BUILD_NUMBER}'"
             }
         }
     }
     post {
-        always {
+        success {
             archiveArtifacts artifacts: '*.tar.gz', fingerprint: true
+        }
+        cleanup {
+            echo 'Cleanup ...'
+            sh "docker image prune -f"
         }
     }
 }
