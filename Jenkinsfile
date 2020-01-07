@@ -10,8 +10,8 @@ pipeline {
         stage('Build') {
             steps {
                 echo 'Extract SDK and images'
-                sh "docker run -d --name '${GIT_BRANCH}-${BUILD_NUMBER}' attina/${GIT_BRANCH}:latest"
-                sh "docker exec '${GIT_BRANCH}-${BUILD_NUMBER}' bash -c 'make sdk'"
+                sh "docker run -d -it --name '${GIT_BRANCH}-${BUILD_NUMBER}' attina/${GIT_BRANCH}:latest"
+                sh "docker exec '${GIT_BRANCH}-${BUILD_NUMBER}' make sdk"
                 sh "docker cp '${GIT_BRANCH}-${BUILD_NUMBER}':/home/xtools/buildroot/output/images ./"
                 sh "tar zcf images.tar.gz images"
             }
@@ -19,6 +19,7 @@ pipeline {
         stage('Cleanup') {
             steps {
                 echo 'Cleanup ...'
+				sh "docker stop '${GIT_BRANCH}-${BUILD_NUMBER}'"
                 sh "docker rm '${GIT_BRANCH}-${BUILD_NUMBER}'"
                 sh "docker image prune -f"
             }
