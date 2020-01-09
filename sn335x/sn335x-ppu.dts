@@ -351,7 +351,7 @@
 			     <1 IRQ_TYPE_NONE>;	/* termcount */
 		rb-gpios = <&gpmc 0 GPIO_ACTIVE_HIGH>; /* gpmc_wait0 */
 		ti,nand-xfer-type = "prefetch-dma";
-		ti,nand-ecc-opt = "bch8";
+		ti,nand-ecc-opt = "bch16";
 		ti,elm-id = <&elm>;
 		nand-bus-width = <8>;
 		gpmc,device-width = <1>;
